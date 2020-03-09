@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const url = require("url")
 
 app.use(cors());
 
@@ -22,30 +23,37 @@ mongoose.connect(DB_URL, { useNewUrlParser: true }, (err, client) => {
 require("./models/Post");
 const Post = mongoose.model("posts");
 
-app.get("/api/v1/post/", async (req, res) => {
-    try{
-        const posts = await Post.find();
-        res.send(posts);    
-    }catch(err){
-        console.log(err)
-        res.send(err);
+app.get("/api/v1/posts/", async (req, res) => {
+    const query = url.parse(req.url, true).query;
+
+    if(Object.entries(query).length === 0){
+      try
+      {
+          const posts = await Post.find();
+          res.send(posts);    
+      }catch(err)
+      {
+          console.log(err)
+          res.send(err);
+      }
     }
+    else
+    {
+      try
+      {
+          let {start, end} = query;
+          const posts = await Post.find({}).skip(Number(start)).limit(end - start);
+          res.send(posts);    
+      }catch(err)
+      {
+          console.log(err)
+          res.send(err);
+      }
+    }
+
 })
 
-app.get("/api/v1/post/:start/:end", async (req, res) => {
-    const {start , end } = req.params;
-    console.log(start+" "+end);
-    
-    try{
-        const posts = await Post.find({}).skip(Number(start)).limit(end - start);
-        res.send(posts);    
-    }catch(err){
-        console.log(err)
-        res.send(err);
-    }
-})
-
-app.post("/api/v1/post/addPost", async (req, res) => {
+app.post("/api/v1/posts/", async (req, res) => {
     const {uname, title, description} = req.body;
     const newPost = {
         uname,
@@ -60,7 +68,7 @@ app.post("/api/v1/post/addPost", async (req, res) => {
     }
 })
 
-app.get("/api/v1/post/generateposts", async (req, res) => {
+app.get("/api/v1/posts/generateposts", async (req, res) => {
   const resData = []
   for (let i = 0; i < 20; i++) {
       const curTime = new Date().getTime();
