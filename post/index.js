@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const url = require("url")
+const fetch = require("node-fetch");
 
 app.use(cors());
 
@@ -96,6 +97,19 @@ app.get("/api/v1/posts/generateposts", async (req, res) => {
   }
   res.send(resData);
 });
+
+app.post("/api/v1/posts/map/", async (req, res) => {
+  try{
+    const profilesPromise = fetch("http://localhost:5002/api/v1/profile/");
+    const profilesResponse = await Promise.all([profilesPromise]);
+    const profilesJson = await profilesResponse.json();
+    console.log(profilesJson);
+    res.send(profilesJson);
+  }catch(err){
+    console.log(err)
+    res.send(err)
+  }
+})
 
 const PORT = 5001;
 app.listen(PORT, () => {

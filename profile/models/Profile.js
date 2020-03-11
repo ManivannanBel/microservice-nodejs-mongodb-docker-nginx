@@ -8,14 +8,12 @@ const ProfileSchema = new Schema({
         unique : true
     },
     email : {
-        type : email,
-        required : true,
-        unique : true
+        type : String,
+        required : true
     },
     phone : {
         type : String,
-        required : true,
-        unique : true
+        required : true
     },
     password : {
         type : String,
