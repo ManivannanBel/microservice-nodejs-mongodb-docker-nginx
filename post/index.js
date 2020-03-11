@@ -101,10 +101,18 @@ app.get("/api/v1/posts/generateposts", async (req, res) => {
 app.post("/api/v1/posts/map/", async (req, res) => {
   try{
     const profilesPromise = fetch("http://localhost:5002/api/v1/profile/");
-    const profilesResponse = await Promise.all([profilesPromise]);
+    const [profilesResponse] = await Promise.all([profilesPromise]);
     const profilesJson = await profilesResponse.json();
-    console.log(profilesJson);
-    res.send(profilesJson);
+    
+    const posts = await Post.find();
+    const resultList = []
+    for(let i = 0; i < posts.length; i++ ){
+      let index = Math.floor(Math.random() * profilesJson.length);
+      let uname = profilesJson[index].uname;
+      const result = await Post.findByIdAndUpdate(posts[i].id, {uname}, {new : true});
+      resultList.push(result);
+    }
+    res.send(resultList);
   }catch(err){
     console.log(err)
     res.send(err)

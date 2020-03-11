@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
     uname : {
         type : String,
-        required : true,
-        unique : true
+        required : true
     },
     title : {
         type : String,
