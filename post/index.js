@@ -119,6 +119,21 @@ app.post("/api/v1/posts/map/", async (req, res) => {
   }
 })
 
+app.get("/api/v1/posts/search/", async (req, res) => {
+  const query = url.parse(req.url, true).query;
+  console.log(query.q);
+  
+  if(Object.entries(query).length !== 0){
+    try{
+      const result = await Post.find({"description" : { $regex: `.*${query.q}.*`, $options: 'i' }})
+      res.send(result);
+    }catch(err){
+      console.log(err)
+      res.send(err);
+    }
+  }
+})
+
 const PORT = 5001;
 app.listen(PORT, () => {
   console.log("post service runs on 5001");

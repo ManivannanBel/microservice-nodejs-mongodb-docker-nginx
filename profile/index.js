@@ -38,7 +38,7 @@ app.get("/api/v1/profile", async (req, res) => {
 
 app.get("/api/v1/profile/:username", async (req, res) => {
   const {username} = req.params;
-  //console.log(req.params)
+  console.log(req.params)
   try{
     const result = await Profile.findOne({"uname" : username});
     //console.log(result)
@@ -69,7 +69,7 @@ app.post("/api/v1/profile", async (req, res) => {
 })
 
 app.put("/api/v1/profile/:username", async (req, res) => {
-  //console.log(req.body)
+  console.log(req.body)
   const uname = req.params.username;
   const {email, phone, password} = req.body;
   try{
@@ -83,6 +83,21 @@ app.put("/api/v1/profile/:username", async (req, res) => {
   }catch(err){
     //console.log(err);
     res.send(err);
+  }
+})
+
+app.get("/api/v1/search/profile/", async (req, res) => {
+  const query = url.parse(req.url, true).query;
+  console.log(query)
+  if(Object.entries(query).length !== 0){
+    try{
+      const result = await Profile.find({"uname" : {$regex : `.*${query.q}.*`, $options : 'i'}})
+      console.log(result)
+      res.send(result);
+    }catch(err){
+      console.log(err)
+      res.send(err);
+    }
   }
 })
 
