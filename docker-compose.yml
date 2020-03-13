@@ -1,0 +1,40 @@
+version: '1'
+    services:
+        feed:
+            build: './feed'
+            ports: 
+                - "5000:5000"
+            depends_on:
+                -post
+            
+        post:
+            build: './post'
+            ports:
+                - "5001:5001"
+            depends_on:
+                - db
+            environment: 
+                - MONGO_DB_URI=mongodb://db/Post
+
+        profile:
+            build: './profile'
+            ports: 
+                - "5002:5002"
+            depends_on:
+                - db
+            environment: 
+                - MONGO_DB_URI=mongodb://db/Profile
+
+        search:
+            build: './search'
+            ports: 
+                - "5003:5003"
+            depends_on:
+                - post
+                - profile
+            
+        db:
+            image: mongo
+            ports: 
+                - "27017:27017"
+            

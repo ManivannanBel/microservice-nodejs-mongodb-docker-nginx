@@ -8,15 +8,15 @@ const url = require('url');
 
 app.use(cors());
 
-const DB_URL = "mongodb://127.0.0.1:27017/Posts"
+// const DB_URL = "mongodb://127.0.0.1:27017/Posts"
 
-mongoose.connect(DB_URL, {useNewUrlParser : true}, (err, client) => {
-    if(err){
-        return console.log("err");
-    }
+// mongoose.connect(DB_URL, {useNewUrlParser : true}, (err, client) => {
+//     if(err){
+//         return console.log("err");
+//     }
 
-    console.log("DB connected");
-})
+//     console.log("DB connected");
+// })
 
 app.get("/api/v1/feeds/", async (req, res) => {
     const query = url.parse(req.url, true).query;
