@@ -12,8 +12,8 @@ app.get("/api/v1/search", async (req, res) => {
   const query = url.parse(req.url, true).query;
   if(Object.entries(query).length !== 0){
     try{
-      const searchPostResPromise = fetch(`http://localhost:5001/api/v1/posts/search/?q=${query.q}`)
-      const searchProfileResPromise = fetch(`http://localhost:5002/api/v1/search/profile/?q=${query.q}`)
+      const searchPostResPromise = fetch(`http://post:5001/api/v1/posts/search/?q=${query.q}`)
+      const searchProfileResPromise = fetch(`http://profile:5002/api/v1/search/profile/?q=${query.q}`)
       const [searchPostResResponse, searchProfileResResponse] = await Promise.all([searchPostResPromise, searchProfileResPromise])
       const searchPostResJson = await searchPostResResponse.json();
       const searchProfileResJson = await searchProfileResResponse.json();

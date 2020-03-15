@@ -11,12 +11,18 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const DB_URL = "mongodb://127.0.0.1:27017/Posts";
+let DB_URL = "mongodb://localhost:27017/Post";
+
+if (process.env.MONGO_DB_URI_POST) {
+  console.log(process.env.MONGO_DB_URI_POST)
+  DB_URI = process.env.MONGO_DB_URI_POST;
+}
+
 let db;
 
-mongoose.connect(DB_URL, { useNewUrlParser: true }, (err, client) => {
+mongoose.connect(DB_URL, { useNewUrlParser: true,   useUnifiedTopology: true  }, (err, client) => {
   if (err) {
-    return console.log("err");
+    return console.log(err);
   }
   console.log("DB: POSTS connected");
 });
@@ -100,7 +106,7 @@ app.get("/api/v1/posts/generateposts", async (req, res) => {
 
 app.post("/api/v1/posts/map/", async (req, res) => {
   try{
-    const profilesPromise = fetch("http://localhost:5002/api/v1/profile/");
+    const profilesPromise = fetch("http://profile:5002/api/v1/profile/");
     const [profilesResponse] = await Promise.all([profilesPromise]);
     const profilesJson = await profilesResponse.json();
     

@@ -12,11 +12,15 @@ app.use(bodyParser.urlencoded({ extended : false }))
 app.use(bodyParser.json())
 
 
-const DB_URL = "mongodb://127.0.0.1:27017/Profile";
+let DB_URL = "mongodb://localhost:27017/Profile";
 
-mongoose.connect(DB_URL, { useNewUrlParser: true }, (err, client) => {
+if (process.env.MONGO_DB_URI_PROFILE) {
+  DB_URI = process.env.MONGO_DB_URI_PROFILE;
+}
+
+mongoose.connect(DB_URL, { useNewUrlParser: true,  useUnifiedTopology: true }, (err, client) => {
   if (err) {
-    return console.log("err");
+    return console.log(err);
   }
   console.log("DB: Profile connected");
 });
